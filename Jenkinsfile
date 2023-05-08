@@ -1,19 +1,16 @@
 pipeline {
   agent any
+  environment {
+    SCANNER_HOME = tool 'SonarQube'
+  }
   stages {
-    stage('Build') {
-      steps {
-        sh 'echo "Building..."'
-      }
-    }
     stage('Test') {
       steps {
-        sh 'echo "Testing..."'
-      }
-    }
-    stage('Deploy') {
-      steps {
-        sh 'echo "Deploying..."'
+        withSonarQubeEnv('SonarQube') {
+          sh "${SCANNER_HOME}/bin/sonar-scanner \
+            -D sonar.projectKey=jenkinpipeline \
+            -D sonar.projectName=Unreal-Engine-Project"
+        }
       }
     }
   }
